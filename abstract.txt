@@ -1,0 +1,10 @@
+Abstract:
+
+Are web technologies ready for real time audio?
+
+Javascript JITs have come a long way in recent years, now offering near native code performace on the fly for many application types.
+
+With the recent adoption on AudioWorklets, the browser in now becoming a viable playform for real time audio processing.
+
+Jacob will be presenting project Noisefloor, a proof of concept software Module Synthesizer implemented in Golang and transpiled to Javascript,
+and discussing some of the challenges involved in managing a reliable real time audio thread alongside a browser based UI
