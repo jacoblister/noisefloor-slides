@@ -1,0 +1,149 @@
+VDOM: Write your own DOM bindings in Golang
+27 July 2019
+Tags: gopherjs, wasm
+
+Jacob Lister
+iPayroll
+
+jacob.h.lister@gmail.com
+https://github.com/jacoblister/noisefloor
+
+* About me
+.background images/wellington-down-washed.jpg
+
+Jacob Lister
+
+Personal
+
+- Live in Wellinton, New Zealand
+- Married One Cat
+
+Experience
+
+- Embedded systems development, real time systems
+- SCADA engineering
+- 2d graphics
+- Telecommunications / Network engineering
+- Agritech
+
+#* Project Noisefloor
+#.image images/lca2019-jacob2.png
+
+* Project Noisefloor Background
+- Replacement for old C/C++ sampler/looper
+.image images/carbon.png
+
+* Project Noisefloor Aims
+- Social Project - share on the web
+- Technology refresh (Golang with javascript target)
+- Unconstrained by time/deadlines
+
+* Audio DSP workspace - like Reactor, Max/MSP
+.image images/reaktor.jpg
+
+* Why Golang
+Well placed in the languge stack - high level enough, but down to the metal
+where performance matters
+
+Golang has lots of compile targets:
+
+- Javascript (transpilers exist, Gopherjs is excelent)
+- *Golang* (native build on target platforms Linux, Windows)
+- C/C++ (transpilers exist)
+- Web assembly (Golang can compile to this)
+- Assember
+
+* Minimum Viable Synthesizer
+ .                                                                                                .
+ .                                +------------+                     +------------+               .
+ .           ----- Frequency ---->|            |--------- Signal --->|            |               .
+ .                                | Oscillator |                     |    Gain    |               .
+ .                                |    /\      |                     |     \/     |               .
+ .           ----+-- Trigger ---->|      \/    |          + Gain --->|     /\     |               .
+ .               |                +------------+          |          +------------+               .
+ .               |                                        |                                       .
+ .               |                                        |                                       .
+ .               |                +------------+          |                                       .
+ .               |                |            |          |                                       .
+ .               |                |  Envelope  |          |                                       .
+ .               +-- Trigger ---->|   /\____   |----------+                                       .
+ .                                |  /      \  |                                                  .
+ .                                +------------+                                                  .
+
+* User interface dilemma
+- Project (check)
+- Implementation Language (check, Golang)
+- Pilot implemenation (check, minimum viable synth)
+
+Needs
+
+- Builds for Windows, Linux, web targets, need a common UI for all of them
+- Web browser based HTML/SVG seems the most logical
+
+Questions
+
+- No UI on some platforms? (no, need everything to run everywhere)
+- Conventional REST API, Client/Server app? (no, too high maintenance)
+- Low level graphics (SDL/HTML Canvas)? (no, too much implementation work)
+
+#* Golang Web UI toolkits
+#There is a lot of activity in this space
+#
+#- https://github.com/murlokswarm/app
+#- https://github.com/asticode/go-astilectron
+#- https://github.com/sciter-sdk/go-sciter
+#- https://github.com/dtylman/gowd
+#- https://github.com/zserge/webview (Embeddable web view)
+#- https://github.com/oktadeveloper/okta-go-vue-example
+#
+#- https://github.com/bep/gr (React bindings)
+#- https://github.com/myitcv/x/blob/master/react (React bindings)
+#- https://github.com/rocketlaunchr/react (React bindings)
+#- https://github.com/gopherjs/vecty (React like framework)
+
+* Dom Streaming, Basic Design
+ .                                                                                                .
+ .                         +--------+                     +---------+                             .
+ .                         |        |  -- Dom Patches ->  |         |                             .
+ .                         | Server |                     | Browser |                             .
+ .                         |(Golang)|  <-- UI Events ---  |         |                             .
+ .                         +--------+                     +---------+                             .
+ .                                        (Websocket)                                             .
+
+
+* Demo - Keyboard example
+- Server initated DOM updates
+
+* Code example
+.code  dom.go
+
+* Limitations
+- Limited event handling (no propagation, event bubbling)
+- No browser side api calls
+- No async state updates
+- Could be quite slow (websocket)
+
+* Software Design
+ .                                                                                                .
+ .                                 Backend        |        Frontend                               .
+ .                                                |                                               .
+ .                        +-----------------------------------------------+                       .
+ .                        |                   Platform                    |                       .
+ .         Audio  <---->  |           (Linux, Windows, Javascript)        |  <---- UI Events      .
+ .         MIDI   <---->  |                       +--------------+        |                       .
+ .                        |                       |  Component   |        |  ----> Display        .
+ .                        |                       |         UI   |        |        Updates        .
+ .                        |                 +-----------+        |        |                       .
+ .                        |                 |           |        |        |                       .
+ .                        |                 |   Audio   |        |        |                       .
+ .                        |                 | Component |        |        |                       .
+ .                        |                 |           |        |        |                       .
+ .                        |                 +-----------+        |        |                       .
+ .                        |                       |              |        |                       .
+ .                        |                       |              |        |                       .
+ .                        |                       +--------------+        |                       .
+ .         Storage <--->  |                                               |                       .
+ .                        |                                               |                       .
+ .                        +-----------------------------------------------+                       .
+ .                                                |                                               .
+ .                                                                                                .
