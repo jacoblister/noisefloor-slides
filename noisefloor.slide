@@ -1,9 +1,10 @@
-Noisefloor: Are web technologies ready for real time audio
-22 Jan 2019
-Tags: gopherjs, dsp
+Noisefloor: Write your own modular Synthesizer in Golang
+26 November 2019
+Tags: gopherjs, wasm
 
 Jacob Lister
-Senior Software Developer, Regen
+Frontend Developer, iPayroll
+
 jacob.h.lister@gmail.com
 https://github.com/jacoblister/noisefloor
 
@@ -15,7 +16,7 @@ Jacob Lister
 Personal
 
 - Live in Wellinton, New Zealand
-- Married One Cat
+- Married, with one cat
 
 Experience
 
@@ -23,7 +24,16 @@ Experience
 - SCADA engineering
 - 2d graphics
 - Telecommunications / Network engineering
-- Data Science
+- Agritech
+
+* Talk Format
+- Write your own DOM bindings in Golang revisited
+- Software Design
+- Testing and Benchmarking
+- Code examples (under the hood)
+
+#* Project Noisefloor
+#.image images/lca2019-jacob2.png
 
 * Project Noisefloor Background
 - Replacement for old C/C++ sampler/looper
@@ -31,91 +41,144 @@ Experience
 
 * Project Noisefloor Aims
 - Social Project - share on the web
-- Learn new languages/technologies (Golang with javascript target)
+- Technology refresh (Golang with javascript target)
 - Unconstrained by time/deadlines
 
-* Audio DSP playground - like Reactor, Max/MSP
+* Audio DSP workspace - like Reactor, Max/MSP
 .image images/reaktor.jpg
-
-* Why Web technologies
-- Current javascript JITs have good enough performance
-- Can run on the server with Google V8 engine
-- V8 is the Chrome brower Javascript JIT, open source and can be embedded
-
-* Demo - in the browser
-- On Screen Keyboard
-- Simple synth patch
-
-* Minimum Viable Synthesizer
-.image images/min-viable-synth.png
 
 * Why Golang
 Well placed in the languge stack - high level enough, but down to the metal
 where performance matters
 
-- Javascript (transpilers exist)
-- Java/Python
-- *Golang*
+Golang has lots of compile targets:
+
+- Javascript (transpilers exist, Gopherjs is excelent)
+- *Golang* (native build on target platforms Linux, Windows)
 - C/C++ (transpilers exist)
+- Web assembly (Golang can compile to this)
 - Assember
 
-* Tips for realtime Audio on Linux
-- < 5ms latency needed for real time performance
-- by comparison, gaming at 100fps => 10ms/frame
-- Disable wifi chipsets
-- Use a low latency kernel
-- Use a lightweight window manager (eg Xfce)
-- Ubuntu Studio is a good out of the box solution
+* Minimum Viable Synthesizer
+ .                                                                                                .
+ .                                +------------+                     +------------+               .
+ .           ----- Frequency ---->|            |--------- Signal --->|            |               .
+ .                                | Oscillator |                     |    Gain    |               .
+ .                                |    /\      |                     |    __|__   |               .
+ .           ----+-- Trigger ---->|      \/    |          + Gain --->|      |     |               .
+ .               |                +------------+          |          +------------+               .
+ .               |                                        |                                       .
+ .               |                                        |                                       .
+ .               |                +------------+          |                                       .
+ .               |                |            |          |                                       .
+ .               |                |  Envelope  |          |                                       .
+ .               +-- Trigger ---->|   /\____   |----------+                                       .
+ .                                |  /      \  |                                                  .
+ .                                +------------+                                                  .
 
-* Demo - in realtime thread
-- Runs in Jack audio client
-- V8 harness with javascript loaded
+* User interface dilemma
+- Project (check)
+- Implementation Language (check, Golang)
+- Pilot implemenation (check, minimum viable synth)
 
-* Dependency Management with Dependency dep
-- Simple setup, works well
-- Should probably be migrated to Golang modules
-- 'override' needed for gopherjs
+Needs
 
-* Software structure
-- Minumum viable synthezier revisited
-- static processor graph currently
-- in javascript can compile a processor graph on the fly
+- Builds for Windows, Linux, web targets, need a common UI for all of them
+- Web browser based HTML/SVG seems the most logical
 
-* Gopherjs javascript transpiler
-- Simple source translation
-- Very high Golang platform compatibility, at the expense of performance
-- Very hackable
+Questions
 
-* Brower harness
-- uses AudioContext (currently)
-- simple to setup
-- performance not great
-- connectivity limited
+- No UI on some platforms? (no, need everything to run everywhere)
+- Conventional REST API, Client/Server app? (no, too high maintenance)
+- Low level graphics (SDL/HTML Canvas)? (no, too much implementation work)
 
-* V8 harness
-- Google Chrome browser javascript engine
-- Open source and embeddeble
-- Implemented in C++, so harness can interface with system audio APIs directly
-- Single threaded
+#* Golang Web UI toolkits
+#There is a lot of activity in this space
+#
+#- https://github.com/murlokswarm/app
+#- https://github.com/asticode/go-astilectron
+#- https://github.com/sciter-sdk/go-sciter
+#- https://github.com/dtylman/gowd
+#- https://github.com/zserge/webview (Embeddable web view)
+#- https://github.com/oktadeveloper/okta-go-vue-example
+#
+#- https://github.com/bep/gr (React bindings)
+#- https://github.com/myitcv/x/blob/master/react (React bindings)
+#- https://github.com/rocketlaunchr/react (React bindings)
+#- https://github.com/gopherjs/vecty (React like framework)
 
-* Frontend
-- Browser based, HTML/React
-- Many Golang React bindings exists, all have issuess
-- Again, these are very hackable
+* Dom Streaming, Basic Design
+ .                                                                                                .
+ .                         +--------+                     +---------+                             .
+ .                         |        |  -- Dom Patches ->  |         |                             .
+ .                         | Server |                     | Browser |                             .
+ .                         |(Golang)|  <-- UI Events ---  |         |                             .
+ .                         +--------+                     +---------+                             .
+ .                                        (Websocket)                                             .
 
-* Next steps
-Modules
-- Sequencer
-- Loop
-- Sampler
 
-Classic Synthezier emulation
-- Start with 8 bit era hardware
-- C64 Sid / NES
+* Demo - Keyboard example
+- Server initated DOM updates
 
-Synthedit
-- More DSP primatives
-- Graphical editor
+* Code example
+.code  dom.go
 
-* Thank you
-Questions?
+* Limitations
+- Limited event handling (no propagation, event bubbling)
+- No browser side api calls
+- No async state updates
+- Could be quite slow (websocket)
+
+* Javascript
+ - Build Demo
+ - Run Demo
+
+* Software Design
+.image images/carch.jpeg _ 450
+
+* Software Design
+ .                                                                                                .
+ .                             Backend        |        Frontend                                   .
+ .                                            |                                                   .
+ .                                            |                                                   .
+ .                    +-----------------------------------------------+                           .
+ .                    |                   Platform                    |                           .
+ .     Audio  <---->  |           (Linux, Windows, Javascript)        |  <---- UI Events          .
+ .     MIDI   <---->  |                       +--------------+        |                           .
+ .                    |                       |  Component   |        |  ----> Display Updates    .
+ .                    |                       |      UI      |        |                           .
+ .                    |                 +-----------+        |        |                           .
+ .                    |                 |           |        |        |                           .
+ .                    |                 |   Audio   |        |        |                           .
+ .                    |                 | Component |        |        |                           .
+ .                    |                 |           |        |        |                           .
+ .                    |                 +-----------+        |        |                           .
+ .                    |                       |              |        |                           .
+ .                    |                       |              |        |                           .
+ .                    |                       +--------------+        |                           .
+ .     Storage <--->  |                                               |                           .
+ .                    |                                               |                           .
+ .                    +-----------------------------------------------+                           .
+ .                                            |                                                   .
+ .                                                                                                .
+
+* Project Layout
+
+https://github.com/golang-standards/project-layout
+
+ /pkg     - exported packages
+ /build   - platform specific code (linux, windows, javascript)
+ /app     - application code
+
+- example component
+ onscreenkeyboard (UI)
+ onscreenkeyboard
+
+* Testing / Benchmarking
+
+- Test driven development workflow very satisfying in Golang
+- Benchmarks just as important, and highlight platform differences
+- Benchmark demo (audiomodule/dsp go vs javascript)
+
+* Questions?
+?

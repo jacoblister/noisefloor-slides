@@ -1,0 +1,138 @@
+Noisefloor: Are web technologies ready for real time audio
+22 Jan 2019
+Tags: gopherjs, dsp
+
+Jacob Lister
+Senior Software Developer, Regen
+jacob.h.lister@gmail.com
+https://github.com/jacoblister/noisefloor
+
+* About me
+.background images/wellington-down-washed.jpg
+
+Jacob Lister
+
+Personal
+
+- Live in Wellinton, New Zealand
+- Married One Cat
+
+Experience
+
+- Embedded systems development, real time systems
+- SCADA engineering
+- 2d graphics
+- Telecommunications / Network engineering
+- Data Science
+
+* Project Noisefloor Background
+- Replacement for old C/C++ sampler/looper
+.image images/carbon.png
+
+* Project Noisefloor Aims
+- Social Project - share on the web
+- Learn new languages/technologies (Golang with javascript target)
+- Unconstrained by time/deadlines
+
+* Audio DSP playground - like Reactor, Max/MSP
+.image images/reaktor.jpg
+
+* Why Web technologies
+- Current javascript JITs have good enough performance
+- Can run on the server with Google V8 engine
+- V8 is the Chrome brower Javascript JIT, open source and can be embedded
+
+* Demo - in the browser
+- On Screen Keyboard
+- Simple synth patch
+
+* Minimum Viable Synthesizer
+.image images/min-viable-synth.png
+
+* Minimum Viable Synthesizer
+ .                                                                                                .
+ .                                +------------+                     +------------+               .
+ .           ----- Frequency ---->|            |--------- Signal --->|            |               .
+ .                                | Oscillator |                     |    Gain    |               .
+ .                                |    /\      |                     |    __|__   |               .
+ .           ----+-- Trigger ---->|      \/    |          + Gain --->|      |     |               .
+ .               |                +------------+          |          +------------+               .
+ .               |                                        |                                       .
+ .               |                                        |                                       .
+ .               |                +------------+          |                                       .
+ .               |                |            |          |                                       .
+ .               |                |  Envelope  |          |                                       .
+ .               +-- Trigger ---->|   /\____   |----------+                                       .
+ .                                |  /      \  |                                                  .
+ .                                +------------+                                                  .
+
+* Why Golang
+Well placed in the languge stack - high level enough, but down to the metal
+where performance matters
+
+- Javascript (transpilers exist)
+- Java/Python
+- *Golang*
+- C/C++ (transpilers exist)
+- Assember
+
+* Tips for realtime Audio on Linux
+- < 5ms latency needed for real time performance
+- by comparison, gaming at 100fps => 10ms/frame
+- Disable wifi chipsets
+- Use a low latency kernel
+- Use a lightweight window manager (eg Xfce)
+- Ubuntu Studio is a good out of the box solution
+
+* Demo - in realtime thread
+- Runs in Jack audio client
+- V8 harness with javascript loaded
+
+* Dependency Management with Dependency dep
+- Simple setup, works well
+- Should probably be migrated to Golang modules
+- 'override' needed for gopherjs
+
+* Software structure
+- Minumum viable synthezier revisited
+- static processor graph currently
+- in javascript can compile a processor graph on the fly
+
+* Gopherjs javascript transpiler
+- Simple source translation
+- Very high Golang platform compatibility, at the expense of performance
+- Very hackable
+
+* Brower harness
+- uses AudioContext (currently)
+- simple to setup
+- performance not great
+- connectivity limited
+
+* V8 harness
+- Google Chrome browser javascript engine
+- Open source and embeddeble
+- Implemented in C++, so harness can interface with system audio APIs directly
+- Single threaded
+
+* Frontend
+- Browser based, HTML/React
+- Many Golang React bindings exists, all have issuess
+- Again, these are very hackable
+
+* Next steps
+Modules
+- Sequencer
+- Loop
+- Sampler
+
+Classic Synthezier emulation
+- Start with 8 bit era hardware
+- C64 Sid / NES
+
+Synthedit
+- More DSP primatives
+- Graphical editor
+
+* Thank you
+Questions?

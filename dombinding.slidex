@@ -3,7 +3,7 @@ VDOM: Write your own DOM bindings in Golang
 Tags: gopherjs, wasm
 
 Jacob Lister
-iPayroll
+#Senior Software Developer, Regen
 
 jacob.h.lister@gmail.com
 https://github.com/jacoblister/noisefloor
@@ -58,8 +58,8 @@ Golang has lots of compile targets:
  .                                +------------+                     +------------+               .
  .           ----- Frequency ---->|            |--------- Signal --->|            |               .
  .                                | Oscillator |                     |    Gain    |               .
- .                                |    /\      |                     |     \/     |               .
- .           ----+-- Trigger ---->|      \/    |          + Gain --->|     /\     |               .
+ .                                |    /\      |                     |    __|__   |               .
+ .           ----+-- Trigger ---->|      \/    |          + Gain --->|      |     |               .
  .               |                +------------+          |          +------------+               .
  .               |                                        |                                       .
  .               |                                        |                                       .
@@ -123,27 +123,5 @@ Questions
 - No async state updates
 - Could be quite slow (websocket)
 
-* Software Design
- .                                                                                                .
- .                                 Backend        |        Frontend                               .
- .                                                |                                               .
- .                        +-----------------------------------------------+                       .
- .                        |                   Platform                    |                       .
- .         Audio  <---->  |           (Linux, Windows, Javascript)        |  <---- UI Events      .
- .         MIDI   <---->  |                       +--------------+        |                       .
- .                        |                       |  Component   |        |  ----> Display        .
- .                        |                       |         UI   |        |        Updates        .
- .                        |                 +-----------+        |        |                       .
- .                        |                 |           |        |        |                       .
- .                        |                 |   Audio   |        |        |                       .
- .                        |                 | Component |        |        |                       .
- .                        |                 |           |        |        |                       .
- .                        |                 +-----------+        |        |                       .
- .                        |                       |              |        |                       .
- .                        |                       |              |        |                       .
- .                        |                       +--------------+        |                       .
- .         Storage <--->  |                                               |                       .
- .                        |                                               |                       .
- .                        +-----------------------------------------------+                       .
- .                                                |                                               .
- .                                                                                                .
+#* Questions?
+#?
